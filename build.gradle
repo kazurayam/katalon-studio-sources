@@ -1,12 +1,16 @@
+plugins {
+  id("com.kazurayam.compare-directories") version "0.2.13"
+}
+
 ext {
     KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
     KATALONSTUDIO_SOURCE_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/source"
     KATALONSTUDIO_EXTENSIONS_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/extensions"
-    KATALONSTUDIO_VERSION = '10.0.0'
     VERSIONS_DIR = layout.projectDirectory.dir('versions')
 }
 
 tasks.register('extract') {
+    def KATALONSTUDIO_VERSION = '10.3.1'
     doFirst {
         println "KATALONSTUDIO_INSTALLATION_DIR: ${KATALONSTUDIO_INSTALLATION_DIR}"
         println "KATALONSTUDIO_VERSION: ${KATALONSTUDIO_VERSION}"
@@ -34,5 +38,23 @@ tasks.register('extract') {
             }
             into VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}/resources/extentions")
         }
+    }
+}
+
+tasks.register("compareVersions", com.kazurayam.dircomp.CompareDirectoriesTask) {
+    def versionA = '10.0.0'
+    def versionB = '10.3.1'
+    def outDir = layout.buildDirectory.dir("compareVersions/${versionA}_${versionB}")
+    //
+    dirA = fileTree(VERSIONS_DIR.dir(versionA)) { exclude "**/*.zip" }
+    dirB = fileTree(VERSIONS_DIR.dir(versionB)) { exclude "**/*.zip" }
+    outputFile = outDir.file('differences.json')
+    diffDir = outDir.dir('diff')
+    charsetsToTry.add("Shift_JIS")
+    doFirst {
+        delete outDir
+    }
+    doLast {
+        println "output at " + outDir.get()
     }
 }
