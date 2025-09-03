@@ -4,30 +4,32 @@ plugins {
 
 ext {
     KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
+    KATALONSTUDIO_INSTALLATION_VERSION = '10.3.1'
     KATALONSTUDIO_SOURCE_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/source"
     KATALONSTUDIO_EXTENSIONS_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/extensions"
     VERSIONS_DIR = layout.projectDirectory.dir('versions')
+    COMPARE_VERSION_A = '10.0.0'
+    COMPARE_VERSION_B = '10.3.1'
 }
 
 tasks.register('extract') {
-    def KATALONSTUDIO_VERSION = '10.3.1'
     doFirst {
         println "KATALONSTUDIO_INSTALLATION_DIR: ${KATALONSTUDIO_INSTALLATION_DIR}"
-        println "KATALONSTUDIO_VERSION: ${KATALONSTUDIO_VERSION}"
+        println "KATALONSTUDIO_INSTALLATION_VERSION: ${KATALONSTUDIO_INSTALLATION_VERSION}"
         println "VERSIONS_DIR: ${VERSIONS_DIR}"
     }
     doFirst {
-        delete VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}")
-        mkdir  VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}")
+        delete VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}")
+        mkdir  VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}")
     }
     doLast {
         copy {
             from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core/com.kms.katalon.core-sources.jar")
-            into VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}/resources/source/com.kms.katalon.core")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core")
         }
         copy {
             from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.webui/com.kms.katalon.core.webui-sources.jar")
-            into VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}/resources/source/com.kms.katalon.core.webui")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core.webui")
         }
         // Here I would ignore the jars of cucumber, mobile, testng, webservice, windows as I am not interested in them
     }
@@ -36,25 +38,20 @@ tasks.register('extract') {
             from(KATALONSTUDIO_EXTENSIONS_DIR) {
                 include 'scripts/smart-wait.js'
             }
-            into VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}/resources/extentions")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/extentions")
         }
     }
 }
 
 tasks.register("compareVersions", com.kazurayam.dircomp.CompareDirectoriesTask) {
-    def versionA = '10.0.0'
-    def versionB = '10.3.1'
-    def outDir = layout.buildDirectory.dir("compareVersions/${versionA}_${versionB}")
-    //
-    dirA = fileTree(VERSIONS_DIR.dir(versionA)) { exclude "**/*.zip" }
-    dirB = fileTree(VERSIONS_DIR.dir(versionB)) { exclude "**/*.zip" }
-    outputFile = outDir.file('differences.json')
-    diffDir = outDir.dir('diff')
-    charsetsToTry.add("Shift_JIS")
+    dirA = fileTree(VERSIONS_DIR.dir(COMPARE_VERSION_A)) { exclude "**/*.zip" }
+    dirB = fileTree(VERSIONS_DIR.dir(COMPARE_VERSION_B)) { exclude "**/*.zip" }
+    outputFile = layout.buildDirectory.file("compareVersions/${COMPARE_VERSION_A}_${COMPARE_VERSION_B}/differences.json")
+    diffDir = layout.buildDirectory.dir("compareVersions/${COMPARE_VERSION_A}_${COMPARE_VERSION_B}/diff")
     doFirst {
-        delete outDir
+        delete layout.buildDirectory.dir("compareVersions/${COMPARE_VERSION_A}_${COMPARE_VERSION_B}/diff")
     }
     doLast {
-        println "output at " + outDir.get()
+        println "output at " + outputFile.get()
     }
 }
