@@ -1,10 +1,38 @@
 ext {
-    KATALONSTUDIO_INSTALLATION_DIRECTORY = '/Applications/Katalon Studio.app/Contents/Eclipse'
+    KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
+    KATALONSTUDIO_SOURCE_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/source"
+    KATALONSTUDIO_EXTENSIONS_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/extensions"
     KATALONSTUDIO_VERSION = '10.0.0'
+    VERSIONS_DIR = layout.projectDirectory.dir('versions')
 }
-task showExt {
+
+tasks.register('extract') {
     doFirst {
-        println "KATALONSTUDIO_INSTALLATION_DIRECTORY: ${KATALONSTUDIO_INSTALLATION_DIRECTORY}"
+        println "KATALONSTUDIO_INSTALLATION_DIR: ${KATALONSTUDIO_INSTALLATION_DIR}"
         println "KATALONSTUDIO_VERSION: ${KATALONSTUDIO_VERSION}"
+        println "VERSIONS_DIR: ${VERSIONS_DIR}"
+    }
+    doFirst {
+        delete VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}")
+        mkdir  VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}")
+    }
+    doLast {
+        copy {
+            from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core/com.kms.katalon.core-sources.jar")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}/resources/source/com.kms.katalon.core")
+        }
+        copy {
+            from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.webui/com.kms.katalon.core.webui-sources.jar")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}/resources/source/com.kms.katalon.core.webui")
+        }
+        // Here I would ignore the jars of cucumber, mobile, testng, webservice, windows as I am not interested in them
+    }
+    doLast {
+        copy {
+            from(KATALONSTUDIO_EXTENSIONS_DIR) {
+                include 'scripts/smart-wait.js'
+            }
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_VERSION}/resources/extentions")
+        }
     }
 }
