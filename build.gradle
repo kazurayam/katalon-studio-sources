@@ -3,16 +3,17 @@ plugins {
 }
 
 ext {
-    KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
     KATALONSTUDIO_INSTALLATION_VERSION = '10.3.1'
+    COMPARE_VERSION_A = '9.7.6'
+    COMPARE_VERSION_B = '10.3.1'
+
+    KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
     KATALONSTUDIO_SOURCE_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/source"
     KATALONSTUDIO_EXTENSIONS_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/extensions"
     VERSIONS_DIR = layout.projectDirectory.dir('versions')
-    COMPARE_VERSION_A = '10.0.0'
-    COMPARE_VERSION_B = '10.3.1'
 }
 
-tasks.register('extract') {
+tasks.register('extractVersion') {
     doFirst {
         println "KATALONSTUDIO_INSTALLATION_DIR: ${KATALONSTUDIO_INSTALLATION_DIR}"
         println "KATALONSTUDIO_INSTALLATION_VERSION: ${KATALONSTUDIO_INSTALLATION_VERSION}"
