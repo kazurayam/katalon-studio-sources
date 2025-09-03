@@ -1,0 +1,10 @@
+ext {
+    KATALONSTUDIO_INSTALLATION_DIRECTORY = '/Applications/Katalon Studio.app/Contents/Eclipse'
+    KATALONSTUDIO_VERSION = '10.0.0'
+}
+task showExt {
+    doFirst {
+        println "KATALONSTUDIO_INSTALLATION_DIRECTORY: ${KATALONSTUDIO_INSTALLATION_DIRECTORY}"
+        println "KATALONSTUDIO_VERSION: ${KATALONSTUDIO_VERSION}"
+    }
+}
