@@ -1,11 +1,93 @@
 # katalon-studio-sources
 
+## What this project does
+
+This project creates a folder tree as follows
+
+Please note the following 2 directories:
+
+- `versions`  which contains the source codes of Katalon Studio of various versions
+- `build/compareVersions` which contains the "diff" information of Katalon Studio versions generated out of files under the `versions` directory
+
+```
+$ tree . -L 8
+.
+├── README.md
+├── build
+│   ├── compareVersions
+│   │   └── 9.7.6_10.3.1
+│   │       ├── diff
+│   │       │   └── 9.7.6_10.3.1
+│   │       │       └── resources
+│   │       │           ├── extentions
+│   │       │           │   └── scripts
+│   │       │           └── source
+│   │       │               ├── com.kms.katalon.core
+│   │       │               └── com.kms.katalon.core.webui
+│   │       └── differences.json
+│   ├── nameStatusList.txt
+│   ├── reports
+│   │   └── problems
+│   │       └── problems-report.html
+│   └── tmp
+...
+└── versions
+    ├── 10.3.1
+    │   └── resources
+    │       ├── extentions
+    │       │   └── scripts
+    │       │       └── smart-wait.js
+    │       └── source
+    │           ├── com.kms.katalon.core
+    │           │   ├── META-INF
+    │           │   │   ├── MANIFEST.MF
+    │           │   │   └── maven
+    │           │   │       └── com.kms
+    │           │   └── com
+    │           │       └── kms
+    │           │           └── katalon
+    │           └── com.kms.katalon.core.webui
+    │               ├── META-INF
+    │               │   ├── MANIFEST.MF
+    │               │   └── maven
+    │               │       └── com.kms
+    │               └── com
+    │                   └── kms
+    │                       └── katalon
+    └── 9.7.6
+        └── resources
+            ├── extentions
+            │   └── scripts
+            │       └── smart-wait.js
+            └── source
+                ├── com.kms.katalon.core
+                │   ├── META-INF
+                │   │   ├── MANIFEST.MF
+                │   │   └── maven
+                │   │       └── com.kms
+                │   └── com
+                │       └── kms
+                │           └── katalon
+                └── com.kms.katalon.core.webui
+                    ├── META-INF
+                    │   ├── MANIFEST.MF
+                    │   └── maven
+                    │       └── com.kms
+                    └── com
+                        └── kms
+                            └── katalon
+
+56 directories, 18 files
+```
+
+## custom Gradle tasks
+
 This is a small Gradle project of which `build.gradle` provides 2 custom tasks:
 
 1. `extractVersion`
 2. `compareVersions`
 
-## extractVersion task
+### extractVersion task
 
 - This task assumes that a version of Katalon Studio Free is installed on the machine.
 - The task assumes that I explicitly declare the version number as `ext.KATALONSTUDIO_INSTALLATION_VERSION` in the `ext { ... }` section in the `build.gradle`
@@ -17,7 +99,7 @@ $ gradle extractVersion
 - The task will copy the source files of my interest out of the installation directory into the directory named `<projectDir>/versions/${KATALONSTUDIO_INSTALLTION_VERSION}`.
 - I am interested in the Groovy source codes of the package `com.kms.katalon.core.webui` mainly, and supplementally `com.kms.katalon.core`. Also I am interested in the JavaScript codes that implements so called "Smart Wait" which sometimes causes performance issues.
 
-# compareVersions task
+### compareVersions task
 
 - This task assumes that I specify 2 properties `ext.COMPARE_VERSION_A` and `ext.compare_VERSION_B`. For example,
 ```
