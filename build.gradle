@@ -32,7 +32,7 @@ tasks.register('extractVersion') {
             from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.webui/com.kms.katalon.core.webui-sources.jar")
             into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core.webui")
         }
-        // Here I would ignore the jars of cucumber, mobile, testng, webservice, windows as I am not interested in them
+        // Here I ignore the jars of cucumber, mobile, testng, webservice, windows as I am not interested in them
     }
     doLast {
         copy {
@@ -47,12 +47,13 @@ tasks.register('extractVersion') {
 tasks.register("compareVersions", com.kazurayam.dircomp.CompareDirectoriesTask) {
     dirA = fileTree(VERSIONS_DIR.dir(COMPARE_VERSION_A)) { exclude "**/*.zip" }
     dirB = fileTree(VERSIONS_DIR.dir(COMPARE_VERSION_B)) { exclude "**/*.zip" }
-    outputFile = layout.buildDirectory.file("compareVersions/${COMPARE_VERSION_A}_${COMPARE_VERSION_B}/differences.json")
-    diffDir = layout.buildDirectory.dir("compareVersions/${COMPARE_VERSION_A}_${COMPARE_VERSION_B}/diff")
+    def outDir = layout.buildDirectory.dir("compareVersions/${COMPARE_VERSION_A}_${COMPARE_VERSION_B}").get()
+    outputFile = outDir.file("differences.json")
+    diffDir = outDir.dir("diff")
     doFirst {
-        delete layout.buildDirectory.dir("compareVersions/${COMPARE_VERSION_A}_${COMPARE_VERSION_B}/diff")
+        delete outDir
     }
     doLast {
-        println "output at " + outputFile.get()
+        println "output at " + outDir
     }
 }
