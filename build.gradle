@@ -3,9 +3,9 @@ plugins {
 }
 
 ext {
-    KATALONSTUDIO_INSTALLATION_VERSION = '10.3.1'
-    COMPARE_VERSION_A = '9.7.6'
-    COMPARE_VERSION_B = '10.3.1'
+    KATALONSTUDIO_INSTALLATION_VERSION = '10.2.0'
+    COMPARE_VERSION_A = '10.2.0'
+    COMPARE_VERSION_B = '10.3.2'
 
     KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
     KATALONSTUDIO_SOURCE_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/source"
@@ -27,6 +27,14 @@ tasks.register('extractVersion') {
         copy {
             from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core/com.kms.katalon.core-sources.jar")
             into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core")
+        }
+        copy {
+            from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.mobile/com.kms.katalon.core.mobile-sources.jar")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core.mobile")
+        }
+        copy {
+            from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.webservice/com.kms.katalon.core.webservice-sources.jar")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core.webservice")
         }
         copy {
             from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.webui/com.kms.katalon.core.webui-sources.jar")
