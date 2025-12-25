@@ -3,13 +3,14 @@ plugins {
 }
 
 ext {
-    KATALONSTUDIO_INSTALLATION_VERSION = '10.2.0'
-    COMPARE_VERSION_A = '10.2.0'
-    COMPARE_VERSION_B = '10.3.2'
+    KATALONSTUDIO_INSTALLATION_VERSION = '10.4.2'
+    KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio Enterprise.app/Contents/Eclipse'
 
-    KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
+    COMPARE_VERSION_A = '8.6.9'
+    COMPARE_VERSION_B = '10.4.2'
     KATALONSTUDIO_SOURCE_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/source"
     KATALONSTUDIO_EXTENSIONS_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/extensions"
+    KATALONSTUDIO_HTML_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/html"
     VERSIONS_DIR = layout.projectDirectory.dir('versions')
 }
 
@@ -48,6 +49,10 @@ tasks.register('extractVersion') {
                 include 'scripts/smart-wait.js'
             }
             into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/extentions")
+        }
+        copy {
+             from(KATALONSTUDIO_HTML_DIR)
+             into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/html")
         }
     }
 }
