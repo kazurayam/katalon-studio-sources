@@ -3,11 +3,11 @@ plugins {
 }
 
 ext {
-    KATALONSTUDIO_INSTALLATION_VERSION = '10.4.2'
-    KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio Enterprise.app/Contents/Eclipse'
+    KATALONSTUDIO_INSTALLATION_VERSION = '10.2.4'
+    KATALONSTUDIO_INSTALLATION_DIR = '/Applications/Katalon Studio.app/Contents/Eclipse'
 
-    COMPARE_VERSION_A = '8.6.9'
-    COMPARE_VERSION_B = '10.4.2'
+    COMPARE_VERSION_A = '10.2.4'
+    COMPARE_VERSION_B = '10.3.0'
     KATALONSTUDIO_SOURCE_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/source"
     KATALONSTUDIO_EXTENSIONS_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/extensions"
     KATALONSTUDIO_HTML_DIR = "${KATALONSTUDIO_INSTALLATION_DIR}/configuration/resources/html"
@@ -41,7 +41,11 @@ tasks.register('extractVersion') {
             from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.webui/com.kms.katalon.core.webui-sources.jar")
             into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core.webui")
         }
-        // Here I ignore the jars of cucumber, mobile, testng, webservice, windows as I am not interested in them
+        copy {
+            from zipTree("${KATALONSTUDIO_SOURCE_DIR}/com.kms.katalon.core.cucumber/com.kms.katalon.core.cucumber-sources.jar")
+            into VERSIONS_DIR.dir("${KATALONSTUDIO_INSTALLATION_VERSION}/resources/source/com.kms.katalon.core.cucumber")
+        }
+        // Here I ignore the jars of testng, webservice, windows as I am not interested in them
     }
     doLast {
         copy {
